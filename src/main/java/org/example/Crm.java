@@ -43,9 +43,16 @@ public class Crm {
                 String email = captureStringInput(scanner, "Please enter the lead's email: ");
                 String companyName = captureStringInput(scanner, "Please enter the lead's company name: ");
                 System.out.println("We got: " + name + " " + phoneNumber + " " + email + " " + companyName + "\n");
+                // Here we can create a lead and add it to the leadList
             }
-            if(input.toLowerCase().equals("convert lead")){
-                System.out.println("We will convert lead");
+            if(input.toLowerCase().split(" ")[0].equals("convert")){
+                try{
+                    Integer id = captureParameterFromString(input);
+                    System.out.println("Here we have the id to search on the lead list " + id);
+                    // Here we have an id to search for the lead.
+                } catch (IllegalAccessException e){
+                    System.err.println(e.getMessage());
+                }
             }
             if(input.toLowerCase().equals("show leads")){
                 showLeads(leadList);
@@ -65,5 +72,19 @@ public class Crm {
                 System.out.println("here we will print the leads data!");
             }
         }
+    }
+
+    private static Integer captureParameterFromString(String string) throws IllegalAccessException {
+        Integer id = null;
+        String[] split = string.split(" ");
+        if(split.length != 2){
+            throw new IllegalAccessException("The provided command is invalid. We expected a command followed by an id");
+        }
+        try{
+            id = Integer.parseInt(split[1]);
+        } catch(NumberFormatException e){
+            System.err.println("Could not convert the parameter to an integer");
+        }
+        return id;
     }
 }
