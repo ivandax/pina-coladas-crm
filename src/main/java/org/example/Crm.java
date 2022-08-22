@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Crm {
@@ -28,6 +30,9 @@ public class Crm {
     }
 
     private static void listenForCommands(Scanner scanner) {
+
+        List<Lead> leadList = new ArrayList<>();
+
         while(true){
             System.out.println("Please enter the next command: \n");
             String input = scanner.nextLine();
@@ -42,9 +47,22 @@ public class Crm {
             if(input.toLowerCase().equals("convert lead")){
                 System.out.println("We will convert lead");
             }
+            if(input.toLowerCase().equals("show leads")){
+                showLeads(leadList);
+            }
             if(input.toLowerCase().equals("exit")){
                 System.out.println("Exiting...");
                 break;
+            }
+        }
+    }
+
+    private static void showLeads(List<Lead> leadList){
+        if(leadList.size() == 0){
+            System.out.println("No leads created yet");
+        } else {
+            for(Lead lead : leadList){
+                System.out.println("here we will print the leads data!");
             }
         }
     }
