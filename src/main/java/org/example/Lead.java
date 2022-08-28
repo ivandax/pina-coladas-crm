@@ -1,4 +1,6 @@
 package org.example;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class Lead {
     private String name;
@@ -24,6 +26,12 @@ public class Lead {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public void printMe(){
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String printable = gson.toJson(this);
+        System.out.println(printable);
     }
 }
 

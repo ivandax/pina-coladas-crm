@@ -42,8 +42,9 @@ public class Crm {
                 Integer phoneNumber = captureNumericInput(scanner, "Please enter the lead's phone number: ");
                 String email = captureStringInput(scanner, "Please enter the lead's email: ");
                 String companyName = captureStringInput(scanner, "Please enter the lead's company name: ");
-                System.out.println("We got: " + name + " " + phoneNumber + " " + email + " " + companyName + "\n");
-                // Here we can create a lead and add it to the leadList
+                Lead newLead = new Lead(name, phoneNumber, email, companyName );
+                leadList.add(newLead);
+                System.out.println("New Lead Added! Enter 'show leads' to see list of leads" );
             }
             if(input.toLowerCase().split(" ")[0].equals("convert")){
                 try{
@@ -69,7 +70,7 @@ public class Crm {
             System.out.println("No leads created yet");
         } else {
             for(Lead lead : leadList){
-                System.out.println("here we will print the leads data!");
+                lead.printMe();
             }
         }
     }
