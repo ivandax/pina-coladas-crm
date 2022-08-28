@@ -1,8 +1,6 @@
 package org.example;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Crm {
     public static void startProgram(){
@@ -33,6 +31,9 @@ public class Crm {
 
         List<Lead> leadList = new ArrayList<>();
 
+        Lead testLead = new Lead("Mike S", 324234, "mike@gmail.com", "Royal");
+        leadList.add(testLead);
+
         while(true){
             System.out.println("Please enter the next command: \n");
             String input = scanner.nextLine();
@@ -50,7 +51,20 @@ public class Crm {
                 try{
                     Integer id = captureParameterFromString(input);
                     System.out.println("Here we have the id to search on the lead list " + id);
-                    // Here we have an id to search for the lead.
+                } catch (IllegalAccessException e){
+                    System.err.println(e.getMessage());
+                }
+            }
+            if(input.toLowerCase().split(" ")[0].equals("lookup")){
+                try{
+                    Integer id = captureParameterFromString(input);
+                    Optional<Lead> maybeLead = leadList.stream().filter(lead -> Objects.equals(lead.getId(), id)).findFirst();
+                    if(maybeLead.isPresent()){
+                        System.out.println("Found the lead:\n");
+                        maybeLead.get().printMe();
+                    } else {
+                        System.out.println("We could not find this lead \n");
+                    }
                 } catch (IllegalAccessException e){
                     System.err.println(e.getMessage());
                 }
@@ -68,7 +82,7 @@ public class Crm {
     private static void showLeads(List<Lead> leadList){
         System.out.println(Lead.getLeadCount());
         if(leadList.size() == 0){
-            System.out.println("No leads created yet");
+            System.out.println("No leads created yet\n");
         } else {
             for(Lead lead : leadList){
                 lead.printMe();
@@ -79,11 +93,12 @@ public class Crm {
     private static Integer captureParameterFromString(String string) throws IllegalAccessException {
         Integer id = null;
         String[] split = string.split(" ");
-        if(split.length != 2){
+        if(split.length < 2){
             throw new IllegalAccessException("The provided command is invalid. We expected a command followed by an id");
         }
         try{
-            id = Integer.parseInt(split[1]);
+            String lastStringFromSplit = split[split.length - 1];
+            id = Integer.parseInt(lastStringFromSplit);
         } catch(NumberFormatException e){
             System.err.println("Could not convert the parameter to an integer");
         }

@@ -24,10 +24,6 @@ public class Lead {
         setId();
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public void printMe(){
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String printable = gson.toJson(this);
@@ -36,6 +32,46 @@ public class Lead {
 
     public static Integer getLeadCount(){
         return idCounter - 1;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(int phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getEmailAdress() {
+        return emailAdress;
+    }
+
+    public void setEmailAdress(String emailAdress) {
+        this.emailAdress = emailAdress;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }
 
