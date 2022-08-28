@@ -50,7 +50,15 @@ public class Crm {
             if(input.toLowerCase().split(" ")[0].equals("convert")){
                 try{
                     Integer id = captureParameterFromString(input);
-                    System.out.println("Here we have the id to search on the lead list " + id);
+                    Optional<Lead> maybeLead = leadList.stream().filter(lead -> Objects.equals(lead.getId(), id)).findFirst();
+                    if(maybeLead.isPresent()){
+                        System.out.println("Found the lead:\n");
+                        System.out.println("Creating contact...\n");
+                        Contact newContact = new Contact(maybeLead.get());
+                        newContact.printMe();
+                    } else {
+                        System.out.println("We could not find this lead \n");
+                    }
                 } catch (IllegalAccessException e){
                     System.err.println(e.getMessage());
                 }
