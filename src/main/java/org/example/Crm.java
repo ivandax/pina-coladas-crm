@@ -27,12 +27,33 @@ public class Crm {
         return scanner.nextLine();
     }
 
+    private static Industry captureIndustry(Scanner scanner, String question) {
+        Industry selectedIndustry = null;
+        while (selectedIndustry == null) {
+            System.out.println(question);
+            String input = scanner.nextLine();
+            if(input.equalsIgnoreCase("produce")){
+                selectedIndustry = Industry.PRODUCE;
+            } else if(input.equalsIgnoreCase("ecommerce")){
+                selectedIndustry = Industry.ECOMMERCE;
+            }else if(input.equalsIgnoreCase("manufacturing")){
+                selectedIndustry = Industry.MANUFACTURING;
+            }else if(input.equalsIgnoreCase("medical")){
+                selectedIndustry = Industry.MEDICAL;
+            } else {
+                selectedIndustry = Industry.OTHER;
+            }
+        }
+        return selectedIndustry;
+    }
+
     private static void listenForCommands(Scanner scanner) {
 
         List<Lead> leadList = new ArrayList<>();
+        List<Account> accountList = new ArrayList<>();
 
-        Lead testLead = new Lead("Mike S", 324234, "mike@gmail.com", "Royal");
-        leadList.add(testLead);
+//        Lead testLead = new Lead("Mike S", 324234, "mike@gmail.com", "Royal");
+//        leadList.add(testLead);
 
         while(true){
             System.out.println("Please enter the next command: \n");
@@ -50,7 +71,8 @@ public class Crm {
                         Contact newContact = new Contact(maybeLead.get());
                         newContact.printMe();
                         System.out.println("Please input information for the Account:");
-                        createNewAccount();
+                        createNewAccount(scanner, accountList, newContact);
+                        showAccounts(accountList);
                     } else {
                         System.out.println("We could not find this lead \n");
                     }
@@ -93,8 +115,15 @@ public class Crm {
         System.out.println("New Lead Added! Enter 'show leads' to see list of leads" );
     }
 
-    private static void createNewAccount(){
-        System.out.println("We will create a new account");
+    private static void createNewAccount(Scanner scanner, List<Account> accountList, Contact contact){
+        System.out.println("We will create a new account \n");
+        Industry industry = captureIndustry(scanner, "Please enter the industry:");
+        Integer employeeCount = captureNumericInput(scanner, "Please enter employee count");
+        String city = captureStringInput(scanner, "Please enter the city");
+        String country = captureStringInput(scanner, "Please enter the country");
+        Account newAccount = new Account(industry, employeeCount, city, country);
+        newAccount.addContact(contact);
+        accountList.add(newAccount);
     }
 
     private static void showLeads(List<Lead> leadList){
@@ -104,6 +133,17 @@ public class Crm {
         } else {
             for(Lead lead : leadList){
                 lead.printMe();
+            }
+        }
+    }
+
+    private static void showAccounts(List<Account> accountList){
+        System.out.println("Reporting all accounts: \n");
+        if(accountList.size() == 0){
+            System.out.println("No leads created yet\n");
+        } else {
+            for(Account account : accountList){
+                account.printMe();
             }
         }
     }
