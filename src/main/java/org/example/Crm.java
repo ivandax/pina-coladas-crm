@@ -38,24 +38,19 @@ public class Crm {
             System.out.println("Please enter the next command: \n");
             String input = scanner.nextLine();
             if(input.equalsIgnoreCase("new lead")){
-                System.out.println("We will capture new lead \n");
-                String name = captureStringInput(scanner, "Please enter the lead's name: ");
-                Integer phoneNumber = captureNumericInput(scanner, "Please enter the lead's phone number: ");
-                String email = captureStringInput(scanner, "Please enter the lead's email: ");
-                String companyName = captureStringInput(scanner, "Please enter the lead's company name: ");
-                Lead newLead = new Lead(name, phoneNumber, email, companyName );
-                leadList.add(newLead);
-                System.out.println("New Lead Added! Enter 'show leads' to see list of leads" );
+                createNewLead(scanner, leadList);
             }
             if(input.toLowerCase().split(" ")[0].equals("convert")){
                 try{
                     Integer id = captureParameterFromString(input);
                     Optional<Lead> maybeLead = leadList.stream().filter(lead -> Objects.equals(lead.getId(), id)).findFirst();
                     if(maybeLead.isPresent()){
-                        System.out.println("Found the lead:\n");
-                        System.out.println("Creating contact...\n");
+                        System.out.println("Found the lead:");
+                        System.out.println("Creating contact...");
                         Contact newContact = new Contact(maybeLead.get());
                         newContact.printMe();
+                        System.out.println("Please input information for the Account:");
+                        createNewAccount();
                     } else {
                         System.out.println("We could not find this lead \n");
                     }
@@ -85,6 +80,21 @@ public class Crm {
                 break;
             }
         }
+    }
+
+    private static void createNewLead(Scanner scanner, List<Lead> leadList){
+        System.out.println("We will capture new lead \n");
+        String name = captureStringInput(scanner, "Please enter the lead's name: ");
+        Integer phoneNumber = captureNumericInput(scanner, "Please enter the lead's phone number: ");
+        String email = captureStringInput(scanner, "Please enter the lead's email: ");
+        String companyName = captureStringInput(scanner, "Please enter the lead's company name: ");
+        Lead newLead = new Lead(name, phoneNumber, email, companyName );
+        leadList.add(newLead);
+        System.out.println("New Lead Added! Enter 'show leads' to see list of leads" );
+    }
+
+    private static void createNewAccount(){
+        System.out.println("We will create a new account");
     }
 
     private static void showLeads(List<Lead> leadList){
