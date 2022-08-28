@@ -66,6 +66,7 @@ public class Crm {
     }
 
     private static void showLeads(List<Lead> leadList){
+        System.out.println(Lead.getLeadCount());
         if(leadList.size() == 0){
             System.out.println("No leads created yet");
         } else {

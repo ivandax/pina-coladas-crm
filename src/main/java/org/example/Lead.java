@@ -7,7 +7,7 @@ public class Lead {
     private int phoneNumber;
     private String emailAdress;
     private String companyName;
-    private int id;
+    private Integer id;
 
     private static int idCounter = 1;
 
@@ -24,7 +24,7 @@ public class Lead {
         setId();
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -32,6 +32,10 @@ public class Lead {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String printable = gson.toJson(this);
         System.out.println(printable);
+    }
+
+    public static Integer getLeadCount(){
+        return idCounter - 1;
     }
 }
 
