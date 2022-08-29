@@ -72,4 +72,12 @@ public class Account {
         System.out.println(printable);
     }
 
+    public List<Contact> getContacts(){
+        return this.contactList;
+    }
+
+    public List<Opportunity> getOpportunityList(){
+        return this.opportunityList;
+    }
+
 }
