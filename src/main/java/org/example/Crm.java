@@ -62,7 +62,7 @@ public class Crm {
                     Integer id = captureParameterFromString(input);
                     Optional<Opportunity> maybeOpportunity = opportunityList.stream().filter(opp -> Objects.equals(opp.getId(), id)).findFirst();
                     if(maybeOpportunity.isPresent()){
-                        System.out.println("Found the opportunity:\n");
+                        System.out.println("Found the opportunity, setting to lost:\n");
                         maybeOpportunity.get().setStatus(Status.CLOSED_LOST);
                         updateOpportunityInAccounts(accountList, maybeOpportunity.get());
                         maybeOpportunity.get().printMe();
@@ -101,6 +101,8 @@ public class Crm {
             }
             if(input.toLowerCase().equals("show accounts")){
                 showAccounts(accountList);
+            } else {
+                System.out.println("Command not recognized \n");
             }
         }
     }
