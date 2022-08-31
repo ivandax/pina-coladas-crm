@@ -12,9 +12,7 @@ public class Crm {
 
         List<Lead> leadList = new ArrayList<>();
         List<Account> accountList = new ArrayList<>();
-
-//        Lead testLead = new Lead("Mike S", 324234, "mike@gmail.com", "Royal");
-//        leadList.add(testLead);
+        List<Opportunity> opportunityList = new ArrayList<>();
 
         while(true){
             System.out.println("Please enter the next command: \n");
@@ -33,7 +31,7 @@ public class Crm {
                         Contact newContact = new Contact(maybeLead.get());
                         newContact.printMe();
                         System.out.println("Please input information for the Account:");
-                        createNewAccount(scanner, accountList, newContact);
+                        createNewAccount(scanner, accountList, opportunityList, newContact);
                         System.out.println("Removing lead with id " + leadId);
                         leadList.removeIf(lead -> Objects.equals(lead.getId(), leadId));
                         System.out.println("Current accounts: \n");
@@ -59,12 +57,50 @@ public class Crm {
                     System.err.println(e.getMessage());
                 }
             }
+            if(input.toLowerCase().split(" ")[0].equals("close-lost")){
+                try{
+                    Integer id = captureParameterFromString(input);
+                    Optional<Opportunity> maybeOpportunity = opportunityList.stream().filter(opp -> Objects.equals(opp.getId(), id)).findFirst();
+                    if(maybeOpportunity.isPresent()){
+                        System.out.println("Found the opportunity:\n");
+                        maybeOpportunity.get().setStatus(Status.CLOSED_LOST);
+                        updateOpportunityInAccounts(accountList, maybeOpportunity.get());
+                        maybeOpportunity.get().printMe();
+                    } else {
+                        System.out.println("We could not find this opportunity \n");
+                    }
+                } catch (IllegalAccessException e){
+                    System.err.println(e.getMessage());
+                }
+            }
+            if(input.toLowerCase().split(" ")[0].equals("close-won")){
+                try{
+                    Integer id = captureParameterFromString(input);
+                    Optional<Opportunity> maybeOpportunity = opportunityList.stream().filter(opp -> Objects.equals(opp.getId(), id)).findFirst();
+                    if(maybeOpportunity.isPresent()){
+                        System.out.println("Found the opportunity, setting to won:\n");
+                        maybeOpportunity.get().setStatus(Status.CLOSED_WON);
+                        updateOpportunityInAccounts(accountList, maybeOpportunity.get());
+                        maybeOpportunity.get().printMe();
+                    } else {
+                        System.out.println("We could not find this opportunity \n");
+                    }
+                } catch (IllegalAccessException e){
+                    System.err.println(e.getMessage());
+                }
+            }
             if(input.toLowerCase().equals("show leads")){
                 showLeads(leadList);
             }
             if(input.toLowerCase().equals("exit")){
                 System.out.println("Exiting...");
                 break;
+            }
+            if(input.toLowerCase().equals("show opportunities")){
+                showOpportunities(opportunityList);
+            }
+            if(input.toLowerCase().equals("show accounts")){
+                showAccounts(accountList);
             }
         }
     }
@@ -136,30 +172,31 @@ public class Crm {
         System.out.println("New Lead Added! Enter 'show leads' to see list of leads" );
     }
 
-    private static void createNewAccount(Scanner scanner, List<Account> accountList, Contact contact){
+    private static void createNewAccount(Scanner scanner, List<Account> accountList, List<Opportunity> opportunityList, Contact contact){
         System.out.println("We will create a new account \n");
         Industry industry = captureIndustry(scanner);
         Integer employeeCount = captureNumericInput(scanner, "Please enter employee count");
         String city = captureStringInput(scanner, "Please enter the city");
         String country = captureStringInput(scanner, "Please enter the country");
         Account newAccount = new Account(industry, employeeCount, city, country);
-        createNewOpportunity(scanner, newAccount, contact);
+        Opportunity newOpportunity = createNewOpportunity(scanner, contact);
+        opportunityList.add(newOpportunity);
         newAccount.addContact(contact);
+        newAccount.addOpportunity(newOpportunity);
         accountList.add(newAccount);
     }
 
-    private static void createNewOpportunity(Scanner scanner, Account account, Contact contact){
+    private static Opportunity createNewOpportunity(Scanner scanner, Contact contact){
         System.out.println("We will create a new opportunity \n");
         Product product = captureProduct(scanner);
         Integer quantity = captureNumericInput(scanner, "How many of this product?");
-        Opportunity newOpportunity = new Opportunity(contact, product, quantity, Status.OPEN);
-        account.addOpportunity(newOpportunity);
+        return new Opportunity(contact, product, quantity, Status.OPEN);
     }
 
     private static void showLeads(List<Lead> leadList){
         System.out.println(Lead.getLeadCount());
         if(leadList.size() == 0){
-            System.out.println("No leads created yet\n");
+            System.out.println("No leads available\n");
         } else {
             for(Lead lead : leadList){
                 lead.printMe();
@@ -170,10 +207,21 @@ public class Crm {
     private static void showAccounts(List<Account> accountList){
         System.out.println("Reporting all accounts: \n");
         if(accountList.size() == 0){
-            System.out.println("No leads created yet\n");
+            System.out.println("No accounts available\n");
         } else {
             for(Account account : accountList){
                 account.printMe();
+            }
+        }
+    }
+
+    private static void showOpportunities(List<Opportunity> opportunityList){
+        System.out.println("Reporting all opportunities: \n");
+        if(opportunityList.size() == 0){
+            System.out.println("No opportunities available\n");
+        } else {
+            for(Opportunity opp : opportunityList){
+                opp.printMe();
             }
         }
     }
@@ -191,5 +239,16 @@ public class Crm {
             System.err.println("Could not convert the parameter to an integer");
         }
         return id;
+    }
+
+    private static void updateOpportunityInAccounts(List<Account> accountList, Opportunity opportunity){
+        for(Account account : accountList){
+            List<Opportunity> opportunityList = account.getOpportunityList();
+            for(Opportunity opp : opportunityList){
+                if(Objects.equals(opp.getId(), opportunity.getId())){
+                    opp.setStatus(opportunity.getStatus());
+                }
+            }
+        }
     }
 }

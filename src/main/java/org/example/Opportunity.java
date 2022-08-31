@@ -1,5 +1,8 @@
 package org.example;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 public class Opportunity {
 
     private Integer id;
@@ -16,6 +19,9 @@ public class Opportunity {
         this.product = product;
         this.quantity = quantity;
         this.status = status;
+        this.id = idCounter;
+
+        idCounter++;
     }
 
     public Integer getId() {
@@ -56,5 +62,11 @@ public class Opportunity {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public void printMe(){
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String printable = gson.toJson(this);
+        System.out.println(printable);
     }
 }
