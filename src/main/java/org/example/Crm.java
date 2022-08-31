@@ -27,12 +27,16 @@ public class Crm {
                     Integer id = captureParameterFromString(input);
                     Optional<Lead> maybeLead = leadList.stream().filter(lead -> Objects.equals(lead.getId(), id)).findFirst();
                     if(maybeLead.isPresent()){
+                        Integer leadId = maybeLead.get().getId();
                         System.out.println("Found the lead:");
                         System.out.println("Creating contact...");
                         Contact newContact = new Contact(maybeLead.get());
                         newContact.printMe();
                         System.out.println("Please input information for the Account:");
                         createNewAccount(scanner, accountList, newContact);
+                        System.out.println("Removing lead with id " + leadId);
+                        leadList.removeIf(lead -> Objects.equals(lead.getId(), leadId));
+                        System.out.println("Current accounts: \n");
                         showAccounts(accountList);
                     } else {
                         System.out.println("We could not find this lead \n");
