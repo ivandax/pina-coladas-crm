@@ -65,6 +65,9 @@ public class Account {
     public void addContact(Contact contact){
         this.contactList.add(contact);
     }
+    public void addOpportunity(Opportunity opportunity){
+        this.opportunityList.add(opportunity);
+    }
 
     public void printMe(){
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
