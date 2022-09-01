@@ -16,7 +16,7 @@ public class AccountTest {
     }
 
     @Test
-    @DisplayName("Should property add contact")
+    @DisplayName("Should properly add contact")
     public void shouldAddContact() {
         Account testAccount = new Account(Industry.ECOMMERCE, 5, "Test city", "Test country");
         Lead newLead = new Lead("Mike", 3453, "some email", "some company");
@@ -28,7 +28,7 @@ public class AccountTest {
     }
 
     @Test
-    @DisplayName("Should property add opportunity")
+    @DisplayName("Should properly add opportunity")
     public void shouldAddOpportunity() {
         Account testAccount = new Account(Industry.ECOMMERCE, 5, "Test city", "Test country");
         Lead newLead = new Lead("Mike", 3453, "some email", "some company");
